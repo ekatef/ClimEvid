@@ -1,5 +1,7 @@
 rm(list = ls())
 
+library(tidyverse)
+
 url_const_char <- "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/terminowe/klimat/"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #		extract data
@@ -56,9 +58,20 @@ for (i in seq(along.with = url_names)){
 	# following https://stackoverflow.com/a/3053883/8465924
 	temp <- tempfile()
 	download.file(url_names[i], temp)
-	meteo_data_list[[i]] <- read.table(unz(temp, fl_names[i]), sep = ",")
+	meteo_data_list[[i]] <- read.table(unz(temp, fl_names[i]), sep = ",",
+		stringsAsFactors = FALSE)
 	unlink(temp)
 	# trying to be polite
 	Sys.sleep(1 + abs(rnorm(1, mean = 1, sd = 2)))
 }
+
+res_df <- bind_rows(res_list)
+colnames(res_df) <- c("st_id", "st_name", "year", "month", "day", "hour",
+	"tas", "tas_status", "twet", "twet_status", "ice_ind", "ventil_ind",
+	"hum_rel", "hum_status", "wind_drct", "wind_drct_status", 
+	"wind_vel", "wind_vel_status", "cloudns", "cloudns_status",
+	"visability", "visability_status")
+
+if (!dir.exists("./data")) dir.create("./data")
+write_delim(res_df, file.path("./data", "PL_meteo_klim.csv"), delim = ";")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
