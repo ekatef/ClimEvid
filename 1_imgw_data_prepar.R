@@ -65,7 +65,10 @@ for (i in seq(along.with = url_names)){
 	Sys.sleep(1 + abs(rnorm(1, mean = 1, sd = 2)))
 }
 
-res_df <- bind_rows(res_list)
+# according to
+# https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/terminowe/klimat/k_t_format.txt
+# NB Status "8" brak pomiaru = Statuses "8" means no observation available
+res_df <- bind_rows(meteo_data_list)
 colnames(res_df) <- c("st_id", "st_name", "year", "month", "day", "hour",
 	"tas", "tas_status", "twet", "twet_status", "ice_ind", "ventil_ind",
 	"hum_rel", "hum_status", "wind_drct", "wind_drct_status", 
