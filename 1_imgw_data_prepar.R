@@ -2,6 +2,8 @@ rm(list = ls())
 
 library(tidyverse)
 
+# Data source is Polish Institute of Meteorology and Water Management - National Research Institute
+# (Instytut Meteorologii i Gospodarki Wodnej – Państwowy Instytut Badawczy)
 url_const_char <- "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/terminowe/klimat/"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #		extract data
