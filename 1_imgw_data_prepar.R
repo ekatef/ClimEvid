@@ -78,3 +78,17 @@ colnames(res_df) <- c("st_id", "st_name", "year", "month", "day", "hour",
 if (!dir.exists("./data")) dir.create("./data")
 write_delim(res_df, file.path("./data", "PL_meteo_klim.csv"), delim = ";")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#		look on the data
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+res_group <- group_by(res_df, st_id, year)
+res_group <- res_df %>%
+	mutate(tas_ok = (!is.na(tas) & ifelse(!is.na(tas_status), tas_status != 8, TRUE))) %>%
+	group_by(st_id)
+
+res_by_st <- res_group %>%
+	summarise(n_tas_obs = sum(tas_ok)) %>%
+	# summarise(n_tas_obs = sum(!is.na(tas))) %>%
+	arrange(desc(n_tas_obs))
+print(res_by_st)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
